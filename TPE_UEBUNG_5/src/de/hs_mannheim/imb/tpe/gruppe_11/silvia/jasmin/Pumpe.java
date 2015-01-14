@@ -1,7 +1,7 @@
 package de.hs_mannheim.imb.tpe.gruppe_11.silvia.jasmin;
 
 /**
- * 
+ * Simuliert eine Pumpe
  * @author Jasmin Cano, Silvia Yildiz
  *
  */
@@ -9,28 +9,19 @@ public class Pumpe implements Runnable {
 
 	public int leistung;
 	private boolean stopped = false;
-
-	Kreislauf kreislauf;
+	private int interval;					//liefert den Zeitraum für ruhemodus
+	
+	Kreislauf kreislauf;					//Objektreferenz auf Kreislauf
 	Reaktor reaktor;
 
 	public Pumpe(Reaktor reaktor, Kreislauf kreislauf, int leistung) {
 		this.reaktor = reaktor;
 		this.kreislauf = kreislauf;
-		this.leistung = leistung;
-		interval = 1000 / leistung;
+		this.leistung = leistung;			//Pumpvorgänge pro 1000 mil.sek.
+		interval = 1000 / leistung;			//abstand zwischen zeit Pumpvorgängen
 	}
 
-	public Thread worker = new Thread(this);
-
-	private int interval;
-
-	public void setLeistung(int leistung) {
-		this.leistung = leistung;
-	}
-
-	public int getLeistung() {
-		return leistung;
-	}
+	public Thread worker = new Thread(this);  
 
 	public void run() {
 		while (!stopped) {
@@ -38,11 +29,13 @@ public class Pumpe implements Runnable {
 				pumpen();
 				Thread.sleep(interval);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				e.printStackTrace();			//printed die Exception aus
 			}
 		}
 	}
-
+/**
+ * Simuliert einen Pumpvorgang
+ */
 	public void pumpen() {
 
 		// Reaktor kühlen
@@ -52,11 +45,7 @@ public class Pumpe implements Runnable {
 		// tauschen
 		kreislauf.tauschen(temperaturReaktor);
 		// warten
-		try {
-			Thread.sleep(interval);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		
 	}
 
 	public void start() {
